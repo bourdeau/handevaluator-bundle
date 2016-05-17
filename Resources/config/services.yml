@@ -1,0 +1,6 @@
+services:
+   bourdeau_bundle_hand_evaluator.handevaluator:
+       class: Bourdeau\Bundle\HandEvaluatorBundle\Services\HandEvaluator
+       arguments: ['@bourdeau_bundle_hand_evaluator.cardvalidator']
+   bourdeau_bundle_hand_evaluator.cardvalidator:
+       class: Bourdeau\Bundle\HandEvaluatorBundle\Services\CardValidator

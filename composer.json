@@ -1,0 +1,25 @@
+{
+    "name": "bourdeau/handevaluator-bundle",
+    "type": "symfony-bundle",
+    "description": "Poker hand evaluator bundle for Symfony3",
+    "keywords": ["poker", "texas holdem", "evaluator", "symfony"],
+    "homepage": "http://github.com/bourdeau/handevaluator-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pierre-Henri Bourdeau",
+            "homepage": "https://github.com/bourdeau"
+        }
+    ],
+    "require": {
+        "php":                      ">=5.6",
+        "symfony/framework-bundle": "~3.0"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Bourdeau\\Bundle\\HandEvaluatorBundle\\": ""
+        }
+    }
+}
