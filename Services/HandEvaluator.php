@@ -31,7 +31,7 @@ class HandEvaluator
     }
 
     /**
-     * Will return the best card conbinaison with the given cards.
+     * Will return the best hand with the given cards.
      *
      * @param array $cards
      *
@@ -39,7 +39,6 @@ class HandEvaluator
      */
     private function findSuite(array $cards)
     {
-
         if ($res = $this->isRoyalFlush($cards)) {
             return $res;
         }
@@ -172,49 +171,22 @@ class HandEvaluator
         throw new \Exception(sprintf('No rank found for card %s'), $card);
     }
 
-    private function getResponse($figureName, $rank, array $response)
+    /**
+     * Return a formated response
+     *
+     * @param  string $handName
+     * @param  int    $rank
+     * @param  array  $response
+     *
+     * @return array
+     */
+    private function getResponse($handName, $rank, array $response)
     {
         return [
-            'figure' => $figureName,
-            'rank'   => (int) $rank,
-            'cards'  => $response,
+            'hand_name'  => $handName,
+            'rank'       => (int) $rank,
+            'cards'      => $response,
         ];
-    }
-
-    /**
-     * Return cards figures.
-     *
-     * @param array $cards
-     *
-     * @return array
-     */
-    private function getFigures(array $cards)
-    {
-        $figures = [];
-
-        foreach ($cards as $card) {
-            $figures[] = substr($card, 0, -1);
-        }
-
-        return $figures;
-    }
-
-    /**
-     * Return the cards colors.
-     *
-     * @param array $cards
-     *
-     * @return array
-     */
-    private function getColors(array $cards)
-    {
-        $colors = [];
-
-        foreach ($cards as $card) {
-            $colors[] = substr($card, -1);
-        }
-
-        return $colors;
     }
 
     private function findMultipleFaceCards(array $cards)
@@ -369,7 +341,6 @@ class HandEvaluator
     private function isFullHouse(array $cards)
     {
         $faces = $this->findMultipleFaceCards($cards);
-        dump($faces);
         $condition = 0;
         $res = [];
 
@@ -381,10 +352,8 @@ class HandEvaluator
                 $condition++;
             }
         }
-        // Fuck! Pick up highest ranked card as you can end up having to choose
+        // @todo Fuck! Pick up highest ranked card as you can end up having to choose
         // for a Full House (e.g. 'QD', 'QS', 'QC', 'KH', 'KS', 'JD', 'JS')
-        dump($condition);
-        die;
         if ($condition == 2) {
             return $this->getResponse("Full House", $this->getRank($res), $res);
         }
@@ -474,26 +443,10 @@ class HandEvaluator
      */
     private function isTreeOfAKind(array $cards)
     {
-        $data = array_count_values($this->getFigures($cards));
-
-        if (in_array(3, $data)) {
-            return true;
-        }
-
-        return false;
     }
 
     private function isTwoPair($cards)
     {
-        $data = array_count_values($this->getFigures($cards));
-
-        dump(in_array(2, $data));
-
-        if (in_array(2, $data) && !in_array(3, $data) && !in_array(4, $data)) {
-            return true;
-        }
-
-        return false;
     }
 
     private function isOnePair()
