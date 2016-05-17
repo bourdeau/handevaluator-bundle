@@ -341,20 +341,48 @@ class HandEvaluator
     private function isFullHouse(array $cards)
     {
         $faces = $this->findMultipleFaceCards($cards);
-        $condition = 0;
+        dump($faces);
         $res = [];
 
         foreach ($faces as $face => $groupedFaces) {
-            if (count($groupedFaces) == 3 || count($groupedFaces) == 2) {
+            $nbCards = count($groupedFaces);
+
+            if ($nbCards == 3) {
                 foreach ($groupedFaces as $value) {
                     $res[] = $value;
                 }
-                $condition++;
+                unset($faces[$face]);
+                break;
             }
         }
+
+        foreach ($faces as $face => $groupedFaces) {
+            $nbCards = count($groupedFaces);
+
+            if ($nbCards >= 2) {
+                foreach ($groupedFaces as $key => $value) {
+                    $res[] = $value;
+                    //We just pick up just 2 cards if there is more
+                    if ($nbCards > 2 && $key == 1) {
+                        break;
+                    }
+                }
+                unset($faces[$face]);
+                break;
+            }
+        }
+
+
+        dump($faces);
+        dump($res);
+        die;
+        if (count($res) !== 5) {
+            throw new \Exception("Full House : Not the appropriate number of cards!");
+        }
+
         // @todo Fuck! Pick up highest ranked card as you can end up having to choose
         // for a Full House (e.g. 'QD', 'QS', 'QC', 'KH', 'KS', 'JD', 'JS')
-        if ($condition == 2) {
+        if ($baseFound && $topFound) {
             return $this->getResponse("Full House", $this->getRank($res), $res);
         }
 

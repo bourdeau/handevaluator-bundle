@@ -15,11 +15,7 @@ class DefaultController extends Controller
     {
         $he = $this->get('bourdeau_bundle_hand_evaluator.handevaluator');
 
-        $flop = ['QD', 'QS', 'QC', 'KH', 'KS'];
-
-        $hand = ['JD', 'JS'];
-
-        $message = $he->findHands(array_merge($flop, $hand));
+        $message = $he->findHands(['AD', 'AC', 'AH', '9D', '9H', '9C', 'JS']);
 
         dump($message);
         die;

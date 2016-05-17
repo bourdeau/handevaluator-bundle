@@ -51,6 +51,7 @@ class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
         // Test Full House
         $validFullHouse = [
             '12' => ['KS', 'KD', 'KC', 'QD', 'QC', '8S', '7D'],
+            '13' => ['AD', 'AC', 'AH', '9D', '9H', '9C', 'JS'],
         ];
         $this->runValidTest("Full House", 5, $validFullHouse);
 
@@ -60,6 +61,9 @@ class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
             '8' => ['9D', '8D', '4D', '3D', '5D', '8C', '2H'],
         ];
         $this->runValidTest("Flush", 9, $validFlush);
+
+        // What would be this ???
+
 
     }
 
