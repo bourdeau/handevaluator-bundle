@@ -35,10 +35,10 @@ class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
         ];
         $this->runValidTest("Royal Flush", 5, $validRoyalFlush);
 
-        // Test Royal Flush
+        // Test Straight Flush
         $validStraightFlush = [
-            '12' => ['KS', 'QS', 'JS', '10S', '9S', '8S', '7D'],
-            '11' => ['QS', 'JS', '10S', '9S', '8S', '7S', '2C'],
+            '12' => ['KS', 'QS', 'JS', '10S', '9S', '8H', '7D'],
+            '11' => ['QS', 'JS', '10S', '9S', '8S', '7C', '2C'],
         ];
         $this->runValidTest("Straight Flush", 5, $validStraightFlush);
 
@@ -55,15 +55,22 @@ class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
         ];
         $this->runValidTest("Full House", 5, $validFullHouse);
 
-        // Test Flush
+        //Test Flush
         $validFlush = [
-            '12' => ['10H', '8H', '7H', '3H', '5H', '8C', '7D'],
+            '9' => ['10H', '8H', '7H', '3H', '5H', '8C', '7D'],
             '8' => ['9D', '8D', '4D', '3D', '5D', '8C', '2H'],
         ];
-        $this->runValidTest("Flush", 9, $validFlush);
+        $this->runValidTest("Flush", 5, $validFlush);
 
-        // What would be this ???
-
+        //Test Straight
+        $validStraight = [
+            '6'  => ['7H', '6S', '5H', '4C', '3H', 'JC', 'AD'],
+            '9'  => ['10S', '9C', '8H', '7D', '6S', 'QC', '2D'],
+            '10' => ['JC', '10H', '9D', '8C', '7S', '5H', '3H'],
+            '12' => ['KD', 'QC', 'JS', '10S', '9S', '6H', '3D'],
+            '7'  => ['8S', '7C', '6C', '5H', '4H', 'JC', '10H'],
+        ];
+        $this->runValidTest("Straight", 5, $validStraight);
 
     }
 

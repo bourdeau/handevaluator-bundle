@@ -70,7 +70,7 @@ class HandEvaluator
             return $res;
         }
 
-        throw new \Exception("Couldn't find a suite!");
+        throw new \Exception("Couldn't find a Hand!");
     }
 
     private function sortCards(array $cards)
@@ -298,9 +298,10 @@ class HandEvaluator
      */
     private function isStraightFlush(array $cards)
     {
-        if ($straightCards = $this->isStraight($cards)) {
-            if ($straightFlushCards = $this->isFlush($straightCards['cards'])) {
-                return $this->getResponse("Straight Flush", $straightFlushCards['rank'], $straightFlushCards['cards']);
+        // Check if Flush first, because isStraight() remove duplicate cards
+        if ($straightFlushCards = $this->isFlush($cards)) {
+            if ($straightCards = $this->isStraight($straightFlushCards['cards'])) {
+                return $this->getResponse("Straight Flush", $straightCards['rank'], $straightCards['cards']);
             }
         }
 
@@ -430,18 +431,14 @@ class HandEvaluator
     private function isStraight(array $cards)
     {
         $cards = $this->sortCards($cards);
-
-        $prev = 0;
         $response = [];
 
         foreach ($cards as $key => $value) {
-            if (array_key_exists($key + 1, $cards) || $key == $prev + 1) {
+            if (array_key_exists($key + 1, $cards) || (array_key_exists($key - 1, $cards) && count($response) == 4)) {
                 $response[$key] = $value;
             } else {
                 $response = [];
             }
-
-            $prev = $key;
 
             if (count($response) == 5) {
                 return $this->getResponse("Straight", $this->getRank($response), $response);
@@ -460,6 +457,7 @@ class HandEvaluator
      */
     private function isTreeOfAKind(array $cards)
     {
+
     }
 
     private function isTwoPair($cards)
