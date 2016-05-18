@@ -14,7 +14,8 @@ class DefaultController extends Controller
     public function indexAction()
     {
         $he = $this->get('bourdeau_bundle_hand_evaluator.handevaluator');
-        $cards = ['10S', '9C', '8H', '7D', '6S', 'QC', '2D'];
+        $cards = ['AC', '2D', '3H', '4H', '5S', 'KS', '10D'];
+
         $message = $he->findHands($cards);
 
         $response = new Response(json_encode($message));

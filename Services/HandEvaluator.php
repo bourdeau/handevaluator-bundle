@@ -33,6 +33,10 @@ class HandEvaluator
     /**
      * Will return the best hand with the given cards.
      *
+     * IMPORTANT: the oder in wich the methods are called is critical.
+     * Changing it will break the code, as a Three of a Kind will always
+     * be found in a Full House for instance.
+     *
      * @param array $cards
      *
      * @return string
@@ -60,7 +64,7 @@ class HandEvaluator
         if ($res = $this->isTreeOfAKind($cards)) {
             return $res;
         }
-        if ($res = $this->isTwoPair($cards)) {
+        if ($res = $this->isTwoPairs($cards)) {
             return $res;
         }
         if ($res = $this->isOnePair($cards)) {
@@ -172,20 +176,20 @@ class HandEvaluator
     }
 
     /**
-     * Return a formated response
+     * Return a formated response.
      *
-     * @param  string $handName
-     * @param  int    $rank
-     * @param  array  $response
+     * @param string $handName
+     * @param int    $rank
+     * @param array  $response
      *
      * @return array
      */
     private function getResponse($handName, $rank, array $response)
     {
         return [
-            'hand_name'  => $handName,
-            'rank'       => (int) $rank,
-            'cards'      => $response,
+            'hand_name' => $handName,
+            'rank' => (int) $rank,
+            'cards' => $response,
         ];
     }
 
@@ -258,7 +262,6 @@ class HandEvaluator
                     throw new \Exception(sprintf("The face %s doesn't exist!", $color));
                     break;
             }
-
         }
 
         return $faces;
@@ -281,7 +284,7 @@ class HandEvaluator
 
         foreach ($hearts as $value) {
             if (count(array_intersect($value, $cards)) === 5) {
-                return $this->getResponse("Royal Flush", $this->getRank($value), $value);
+                return $this->getResponse('Royal Flush', $this->getRank($value), $value);
             }
         }
 
@@ -290,7 +293,7 @@ class HandEvaluator
 
     /**
      * Return an array if the cards are a Straight Flush
-     * otherwise return false
+     * otherwise return false.
      *
      * @param array $cards
      *
@@ -301,7 +304,7 @@ class HandEvaluator
         // Check if Flush first, because isStraight() remove duplicate cards
         if ($straightFlushCards = $this->isFlush($cards)) {
             if ($straightCards = $this->isStraight($straightFlushCards['cards'])) {
-                return $this->getResponse("Straight Flush", $straightCards['rank'], $straightCards['cards']);
+                return $this->getResponse('Straight Flush', $straightCards['rank'], $straightCards['cards']);
             }
         }
 
@@ -310,7 +313,7 @@ class HandEvaluator
 
     /**
      * Return an array if the cards are a Four of a Kind
-     * otherwise return false
+     * otherwise return false.
      *
      * @example AC AD AS AH 2D 7D 10S
      *
@@ -324,7 +327,7 @@ class HandEvaluator
 
         foreach ($faces as $face => $groupedFaces) {
             if (count($groupedFaces) == 4) {
-                return $this->getResponse("Four of a kind", $this->getRank($groupedFaces), $groupedFaces);
+                return $this->getResponse('Four of a kind', $this->getRank($groupedFaces), $groupedFaces);
             }
         }
 
@@ -332,8 +335,8 @@ class HandEvaluator
     }
 
     /**
-    * Return an array if the cards are a Full House
-    * otherwise return false
+     * Return an array if the cards are a Full House
+     * otherwise return false.
      *
      * @param array $cards
      *
@@ -373,7 +376,7 @@ class HandEvaluator
         }
 
         if (count($res) == 5) {
-            return $this->getResponse("Full House", $this->getRank($res), $res);
+            return $this->getResponse('Full House', $this->getRank($res), $res);
         }
 
         return false;
@@ -413,7 +416,8 @@ class HandEvaluator
         foreach ($colors as $color => $groupedCards) {
             if (count($groupedCards) == 5) {
                 $flushCards = $this->sortCards($groupedCards);
-                return $this->getResponse("Flush", $this->getRank($flushCards), $flushCards);
+
+                return $this->getResponse('Flush', $this->getRank($flushCards), $flushCards);
             }
         }
 
@@ -424,6 +428,8 @@ class HandEvaluator
      * Return false if the cards are not a Straight
      * otherwise it returns an array.
      *
+     * @todo Straight from bottom, i.e. AC 2D 3H 4H 5S
+     *
      * @param array $cards
      *
      * @return array|bool
@@ -433,6 +439,23 @@ class HandEvaluator
         $cards = $this->sortCards($cards);
         $response = [];
 
+        // Special straight from bottom with Ace
+        if (
+            array_key_exists(1, $cards) &&
+            array_key_exists(10, $cards) &&
+            array_key_exists(11, $cards) &&
+            array_key_exists(12, $cards) &&
+            array_key_exists(13, $cards)
+        ) {
+            foreach ($cards as $key => $card) {
+                if ($key == 1 || $key == 10 || $key == 11 || $key == 12 || $key == 13) {
+                    $response[] = $card;
+                }
+            }
+
+            return $this->getResponse('Straight', 6, $response);
+        }
+
         foreach ($cards as $key => $value) {
             if (array_key_exists($key + 1, $cards) || (array_key_exists($key - 1, $cards) && count($response) == 4)) {
                 $response[$key] = $value;
@@ -441,7 +464,7 @@ class HandEvaluator
             }
 
             if (count($response) == 5) {
-                return $this->getResponse("Straight", $this->getRank($response), $response);
+                return $this->getResponse('Straight', $this->getRank($response), $response);
             }
         }
 
@@ -457,17 +480,82 @@ class HandEvaluator
      */
     private function isTreeOfAKind(array $cards)
     {
+        $faces = $this->findMultipleFaceCards($cards);
 
+        foreach ($faces as $face => $groupedFaces) {
+            if (count($groupedFaces) == 3) {
+                return $this->getResponse('Three of a kind', $this->getRank($groupedFaces), $groupedFaces);
+            }
+        }
+
+        return false;
     }
 
-    private function isTwoPair($cards)
+    /**
+     * Return an array if it's Two Pairs or false if not.
+     *
+     * @param array $cards
+     *
+     * @return array|bool
+     */
+    private function isTwoPairs(array $cards)
     {
+        $faces = $this->findMultipleFaceCards($cards);
+        $response = [];
+
+        foreach ($faces as $face => $groupedFaces) {
+            if (count($groupedFaces) == 2 && count($response) !== 4) {
+                foreach ($groupedFaces as $value) {
+                    $response[] = $value;
+                }
+            }
+        }
+
+        if (count($response) == 4) {
+            return $this->getResponse('Two Pairs', $this->getRank($response), $response);
+        }
+
+        return false;
     }
 
-    private function isOnePair()
+    /**
+     * Return an array if it's One Pair or false if not.
+     *
+     * @param array $cards
+     *
+     * @return array|bool
+     */
+    private function isOnePair(array $cards)
     {
+        $faces = $this->findMultipleFaceCards($cards);
+        $response = [];
+
+        foreach ($faces as $face => $groupedFaces) {
+            if (count($groupedFaces) == 2 && count($response) !== 2) {
+                foreach ($groupedFaces as $value) {
+                    $response[] = $value;
+                }
+            }
+        }
+
+        if (count($response) == 2) {
+            return $this->getResponse('One Paris', $this->getRank($response), $response);
+        }
+
+        return false;
     }
-    private function isHighCard()
+
+    /**
+     * Return an array if it's High Card or false if not.
+     *
+     * @param array $cards
+     *
+     * @return array|bool
+     */
+    private function isHighCard(array $cards)
     {
+        $response[] =  current($cards);
+
+        return $this->getResponse('High card', $this->getRank($response), $response);
     }
 }
