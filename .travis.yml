@@ -8,5 +8,5 @@ before_script:
 
 
 script:
-    - ./phpunit
+    - ./vendor/bin/phpunit
     - ./vendor/bin/behat
