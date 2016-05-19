@@ -3,6 +3,11 @@ Feature: HandEvaluator
     If I have one, I need to know it's name and it's rank. I also need to get
     the cards that constitue the hand back.
 
+    Scenario: My cards are not valid
+        Given I have the following cards:
+            | AX | Ks | 3548 | JS | 10S | 9S | 8S |
+        Then I should get an error
+
     Scenario: Find a Royal Flush
         Given I have the following cards:
             | AS | KS | QS | JS | 10S | 9S | 8S |

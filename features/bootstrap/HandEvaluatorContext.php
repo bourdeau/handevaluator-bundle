@@ -52,4 +52,16 @@ class HandEvaluatorContext implements Context, SnippetAcceptingContext
                 PHPUnit_Framework_Assert::assertContains($expectedCard, $result['cards']);
         }
     }
+
+    /**
+     * @Then I should get an error
+     */
+    public function iShouldGetAnError()
+    {
+        try {
+            $this->handFinder->findHand($this->cards);
+        } catch(\Exception $e) {
+            PHPUnit_Framework_Assert::assertEquals("The card AX is not in a valid format!", $e->getMessage());
+        }
+    }
 }
