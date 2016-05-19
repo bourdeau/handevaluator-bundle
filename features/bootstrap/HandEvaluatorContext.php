@@ -34,6 +34,7 @@ class HandEvaluatorContext implements Context, SnippetAcceptingContext
      */
     public function iHaveTheFollowingCards(TableNode $table)
     {
+        $this->cards = [];
         $this->cards = $table->getRow(0);
     }
 
@@ -44,9 +45,11 @@ class HandEvaluatorContext implements Context, SnippetAcceptingContext
     {
         $expectedCards = $table->getRow(0);
         $result = $this->handFinder->findHand($this->cards);
-
         PHPUnit_Framework_Assert::assertContains($arg1, $result);
         PHPUnit_Framework_Assert::assertContains($arg2, $result);
-        PHPUnit_Framework_Assert::assertEquals($expectedCards, $result['cards']);
+
+        foreach ($expectedCards as $expectedCard) {
+                PHPUnit_Framework_Assert::assertContains($expectedCard, $result['cards']);
+        }
     }
 }
