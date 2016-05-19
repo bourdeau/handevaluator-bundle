@@ -1,6 +1,5 @@
 {
     "name": "bourdeau/handevaluator-bundle",
-    "license": "MIT",
     "type": "symfony-bundle",
     "description": "Poker hand evaluator bundle for Symfony3",
     "keywords": ["poker", "texas holdem", "evaluator", "symfony"],

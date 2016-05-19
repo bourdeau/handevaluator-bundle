@@ -1,0 +1,7 @@
+default:
+    autoload:
+        '': %paths.base%/features/bootstrap
+    suites:
+        controller_features:
+            paths:    [ %paths.base%/features/handevaluator ]
+            contexts: [ HandEvaluatorContext ]
