@@ -394,6 +394,11 @@ class HandFinder
 
         foreach ($cards as $card) {
             $color = substr($card, -1);
+
+            if (!in_array($color, ['S', 'D', 'C', 'H'])) {
+                throw new \Exception(sprintf("The color %s doesn't exist!", $color));
+            }
+
             if ($color == 'S') {
                 $colors['S'][] = $card;
             } elseif ($color == 'D') {
@@ -402,8 +407,6 @@ class HandFinder
                 $colors['C'][] = $card;
             } elseif ($color == 'H') {
                 $colors['H'][] = $card;
-            } else {
-                throw new \Exception(sprintf("The color %s doesn't exist!", $color));
             }
         }
 
@@ -486,6 +489,35 @@ class HandFinder
     }
 
     /**
+     * Find one or n pair
+     *
+     * @param  string $typeOfPair
+     * @param  int $nbCards
+     * @param  array  $cards
+     *
+     * @return array|bool
+     */
+    private function findPair($typeOfPair, $nbCards, array $cards)
+    {
+        $faces = $this->findMultipleFaceCards($cards);
+        $response = [];
+
+        foreach ($faces as $face => $groupedFaces) {
+            if (count($groupedFaces) == 2 && count($response) !== $nbCards) {
+                foreach ($groupedFaces as $value) {
+                    $response[] = $value;
+                }
+            }
+        }
+
+        if (count($response) == $nbCards) {
+            return $this->getResponse($typeOfPair, $this->getRank($response), $response);
+        }
+
+        return false;
+    }
+
+    /**
      * Return an array if it's Two Pairs or false if not.
      *
      * @param array $cards
@@ -494,19 +526,8 @@ class HandFinder
      */
     private function isTwoPairs(array $cards)
     {
-        $faces = $this->findMultipleFaceCards($cards);
-        $response = [];
-
-        foreach ($faces as $face => $groupedFaces) {
-            if (count($groupedFaces) == 2 && count($response) !== 4) {
-                foreach ($groupedFaces as $value) {
-                    $response[] = $value;
-                }
-            }
-        }
-
-        if (count($response) == 4) {
-            return $this->getResponse('Two Pairs', $this->getRank($response), $response);
+        if ($response = $this->findPair('Two Pairs', 4, $cards)) {
+            return $response;
         }
 
         return false;
@@ -521,19 +542,8 @@ class HandFinder
      */
     private function isOnePair(array $cards)
     {
-        $faces = $this->findMultipleFaceCards($cards);
-        $response = [];
-
-        foreach ($faces as $face => $groupedFaces) {
-            if (count($groupedFaces) == 2 && count($response) !== 2) {
-                foreach ($groupedFaces as $value) {
-                    $response[] = $value;
-                }
-            }
-        }
-
-        if (count($response) == 2) {
-            return $this->getResponse('One Pair', $this->getRank($response), $response);
+        if ($response = $this->findPair('One Pair', 2, $cards)) {
+            return $response;
         }
 
         return false;
