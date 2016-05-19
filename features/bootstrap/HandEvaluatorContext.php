@@ -38,13 +38,15 @@ class HandEvaluatorContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then I should get a :arg1 with a rank :arg2
+     * @Then I should get a :arg1 with a rank :arg2 with the following cards:
      */
-    public function iShouldGetAWithARank($arg1, $arg2)
+    public function iShouldGetAWithARankWithTheFollowingCards($arg1, $arg2, TableNode $table)
     {
+        $expectedCards = $table->getRow(0);
         $result = $this->handFinder->findHand($this->cards);
 
         PHPUnit_Framework_Assert::assertContains($arg1, $result);
         PHPUnit_Framework_Assert::assertContains($arg2, $result);
+        PHPUnit_Framework_Assert::assertEquals($expectedCards, $result['cards']);
     }
 }
