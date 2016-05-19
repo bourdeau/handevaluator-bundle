@@ -1,6 +1,6 @@
 <?php
 
-namespace Bourdeau\Bundle\HandEvaluatorBundle\Services;
+namespace Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator;
 
 /**
  * CardValidator

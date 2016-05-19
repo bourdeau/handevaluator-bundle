@@ -1,27 +1,27 @@
 <?php
 namespace Bourdeau\Bundle\HandEvaluatorBundle\Test\Services;
 
-use Bourdeau\Bundle\HandEvaluatorBundle\Services\HandEvaluator;
+use Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator\HandFinder;
 
 /**
  * Class HandEvaluatorTest
  */
-class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
+class HandFinderTest extends \PHPUnit_Framework_TestCase
 {
-    private $handEvaluator;
+    private $handFinder;
 
     /**
      * {@inheritDoc}
      */
     protected function setUp()
     {
-        $cardValidator = $this->getMock('Bourdeau\Bundle\HandEvaluatorBundle\Services\CardValidator');
+        $cardValidator = $this->getMock('Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator\CardValidator');
 
         $cardValidator->expects($this->any())
                       ->method('areValid')
                       ->willReturn(true);
 
-        $this->handEvaluator = new HandEvaluator($cardValidator);
+        $this->handFinder = new HandFinder($cardValidator);
     }
 
     public function testFindHands()
@@ -79,11 +79,17 @@ class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
         ];
         $this->runValidTest("Three of a kind", 3, $cards);
 
-        // Test Three of a kind
+        // Test Two Pairs
         $cards = [
             '9'  => ['10C', '10H', '2H', '2S', 'JC', '6C', '9D'],
         ];
         $this->runValidTest("Two Pairs", 4, $cards);
+
+        // Test One Pair
+        $cards = [
+            '9'  => ['10C', '10H', 'KH', '2S', 'JC', '6C', '9D'],
+        ];
+        $this->runValidTest("One pair", 2, $cards);
 
     }
 
@@ -92,7 +98,7 @@ class HandEvaluatorTest extends \PHPUnit_Framework_TestCase
         foreach ($arrayCards as $rank => $cards) {
             shuffle($cards);
 
-            $test = $this->handEvaluator->findHands($cards);
+            $test = $this->handFinder->findHand($cards);
 
             $this->assertInternalType("array", $test);
             $this->assertEquals($handName, $test["hand_name"]);

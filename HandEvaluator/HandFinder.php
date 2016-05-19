@@ -1,12 +1,17 @@
 <?php
 
-namespace Bourdeau\Bundle\HandEvaluatorBundle\Services;
+namespace Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator;
 
 /**
- * Hand Evaluator.
+ * Hand Evaluator for Poker
+ *
+ * @author
  */
-class HandEvaluator
+class HandFinder
 {
+    /**
+     * @var [type]
+     */
     private $cardValidator;
 
     public function __construct($cardValidator)
@@ -15,22 +20,7 @@ class HandEvaluator
     }
 
     /**
-     * The main class method.
      *
-     * @param array $cards
-     *
-     * @return string
-     */
-    public function findHands(array $cards)
-    {
-        if (!$this->cardValidator->areValid($cards)) {
-            throw new \Exception('Your cards are not valid');
-        }
-
-        return $this->findSuite($cards);
-    }
-
-    /**
      * Will return the best hand with the given cards.
      *
      * IMPORTANT: the oder in wich the methods are called is critical.
@@ -41,8 +31,12 @@ class HandEvaluator
      *
      * @return string
      */
-    private function findSuite(array $cards)
+    public function findHand(array $cards)
     {
+        if (!$this->cardValidator->areValid($cards)) {
+            throw new \Exception('Your cards are not valid');
+        }
+
         if ($res = $this->isRoyalFlush($cards)) {
             return $res;
         }
@@ -539,7 +533,7 @@ class HandEvaluator
         }
 
         if (count($response) == 2) {
-            return $this->getResponse('One Paris', $this->getRank($response), $response);
+            return $this->getResponse('One pair', $this->getRank($response), $response);
         }
 
         return false;
