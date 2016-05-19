@@ -5,7 +5,7 @@ namespace Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator;
 /**
  * Hand Evaluator for Poker
  *
- * @author
+ * @author Pierre-Henri Bourdeau <phbasic@gmail.com>
  */
 class HandFinder
 {

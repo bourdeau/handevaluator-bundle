@@ -1,4 +1,7 @@
 services:
+   bourdeau_bundle_hand_evaluator.winnerfinder:
+       class: Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator\WinnerFinder
+       arguments: ['@bourdeau_bundle_hand_evaluator.handfinder']
    bourdeau_bundle_hand_evaluator.handfinder:
        class: Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator\HandFinder
        arguments: ['@bourdeau_bundle_hand_evaluator.cardvalidator']

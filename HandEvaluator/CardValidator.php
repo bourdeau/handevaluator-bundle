@@ -6,6 +6,8 @@ namespace Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator;
  * CardValidator
  *
  * Validate that the given cards are a valid set of cards for Texas Holdem Poker
+ *
+ * @author Pierre-Henri Bourdeau <phbasic@gmail.com>
  */
 class CardValidator
 {
