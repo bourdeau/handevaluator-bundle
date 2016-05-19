@@ -8,3 +8,9 @@ Feature: HandEvaluator
             | AS | KS | QS | JS | 10S | 9S | 8S |
         Then I should get a "Royal Flush" with a rank "13" with the following cards:
             | AS | KS | QS | JS | 10S |
+
+    Scenario: Find a Straight Flush
+        Given I have the following cards:
+            |QS| JS | 10S | 9S | 8S | 7C | 2C |
+        Then I should get a "Straight Flush" with a rank "11" with the following cards:
+            |QS| JS | 10S | 9S | 8S |
