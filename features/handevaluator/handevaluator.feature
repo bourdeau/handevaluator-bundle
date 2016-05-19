@@ -32,3 +32,9 @@ Feature: HandEvaluator
             | 9C | 8C | 7C | 5C | 4C | 9H | 5H |
         Then I should get a "Flush" with a rank "8" with the following cards:
             | 9C | 8C | 7C | 5C | 4C |
+
+    Scenario: Find a Straight
+        Given I have the following cards:
+            | 10C | 9S | 8D | 7S | 6D | KS | 2C |
+        Then I should get a "Straight" with a rank "9" with the following cards:
+            | 10C | 9S | 8D | 7S | 6D |
