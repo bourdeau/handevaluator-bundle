@@ -89,7 +89,7 @@ class HandFinderTest extends \PHPUnit_Framework_TestCase
         $cards = [
             '9'  => ['10C', '10H', 'KH', '2S', 'JC', '6C', '9D'],
         ];
-        $this->runValidTest("One pair", 2, $cards);
+        $this->runValidTest("One Pair", 2, $cards);
 
     }
 

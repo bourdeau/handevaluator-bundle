@@ -533,7 +533,7 @@ class HandFinder
         }
 
         if (count($response) == 2) {
-            return $this->getResponse('One pair', $this->getRank($response), $response);
+            return $this->getResponse('One Pair', $this->getRank($response), $response);
         }
 
         return false;

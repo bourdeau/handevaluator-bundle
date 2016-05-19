@@ -38,3 +38,21 @@ Feature: HandEvaluator
             | 10C | 9S | 8D | 7S | 6D | KS | 2C |
         Then I should get a "Straight" with a rank "9" with the following cards:
             | 10C | 9S | 8D | 7S | 6D |
+
+    Scenario: Find a Three of a Kind
+        Given I have the following cards:
+            | 9C | 9H | 9S | 8C | 7H | 5S | 4H |
+        Then I should get a "Three of a kind" with a rank "8" with the following cards:
+            | 9C | 9H | 9S |
+
+    Scenario: Find Two Pairs
+        Given I have the following cards:
+            | 10C | 10H | 8C | 8H | 6H | 6S | QC |
+        Then I should get a "Two Pairs" with a rank "9" with the following cards:
+            | 10C | 10H | 8C | 8H |
+
+    Scenario: Find One Pair
+        Given I have the following cards:
+            | 10C | 10H | 2C | 4H | JH | 6S | QC |
+        Then I should get a "One Pair" with a rank "9" with the following cards:
+            | 10C | 10H |
