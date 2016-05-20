@@ -2,6 +2,8 @@
 
 namespace Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator;
 
+use Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator\CardValidator;
+
 /**
  * Hand Evaluator for Poker
  *
@@ -9,12 +11,14 @@ namespace Bourdeau\Bundle\HandEvaluatorBundle\HandEvaluator;
  */
 class HandFinder
 {
-    /**
-     * @var [type]
-     */
     private $cardValidator;
 
-    public function __construct($cardValidator)
+    /**
+     * Constructor
+     *
+     * @param [type] $cardValidator [description]
+     */
+    public function __construct(CardValidator $cardValidator)
     {
         $this->cardValidator = $cardValidator;
     }
@@ -439,8 +443,7 @@ class HandFinder
         $response = [];
 
         // Special straight from bottom with Ace
-        if (
-            array_key_exists(1, $cards) &&
+        if (array_key_exists(1, $cards) &&
             array_key_exists(10, $cards) &&
             array_key_exists(11, $cards) &&
             array_key_exists(12, $cards) &&

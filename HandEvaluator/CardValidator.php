@@ -21,7 +21,7 @@ class CardValidator
     /**
      * The main class method
      *
-     * @param  array  $cards
+     * @param  array $cards
      *
      * @return boolean
      */
