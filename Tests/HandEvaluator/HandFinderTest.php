@@ -102,7 +102,7 @@ class HandFinderTest extends \PHPUnit_Framework_TestCase
 
             $this->assertInternalType("array", $test);
             $this->assertEquals($handName, $test["hand_name"]);
-            $this->assertEquals($rank, $test["rank"]);
+            $this->assertEquals($rank, $test["card_rank"]);
             $this->assertInternalType("array", $test["cards"]);
             $this->assertEquals($nbCard, count($test["cards"]));
         }

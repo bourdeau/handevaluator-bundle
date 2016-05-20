@@ -173,17 +173,19 @@ class HandFinder
      * Return a formated response.
      *
      * @param string $handName
-     * @param int    $rank
+     * @param int    $handRank
+     * @param int    $cardRank
      * @param array  $response
      *
      * @return array
      */
-    private function getResponse($handName, $rank, array $response)
+    private function getResponse($handName, $handRank, $cardRank, array $response)
     {
         return [
             'hand_name' => $handName,
-            'rank' => (int) $rank,
-            'cards' => $response,
+            'hand_rank' => (int) $handRank,
+            'card_rank' => (int) $cardRank,
+            'cards'     => $response,
         ];
     }
 
@@ -278,7 +280,7 @@ class HandFinder
 
         foreach ($hearts as $value) {
             if (count(array_intersect($value, $cards)) === 5) {
-                return $this->getResponse('Royal Flush', $this->getRank($value), $value);
+                return $this->getResponse('Royal Flush', 10, $this->getRank($value), $value);
             }
         }
 
@@ -298,7 +300,7 @@ class HandFinder
         // Check if Flush first, because isStraight() remove duplicate cards
         if ($straightFlushCards = $this->isFlush($cards)) {
             if ($straightCards = $this->isStraight($straightFlushCards['cards'])) {
-                return $this->getResponse('Straight Flush', $straightCards['rank'], $straightCards['cards']);
+                return $this->getResponse('Straight Flush', 9, $straightCards['card_rank'], $straightCards['cards']);
             }
         }
 
@@ -321,7 +323,7 @@ class HandFinder
 
         foreach ($faces as $face => $groupedFaces) {
             if (count($groupedFaces) == 4) {
-                return $this->getResponse('Four of a kind', $this->getRank($groupedFaces), $groupedFaces);
+                return $this->getResponse('Four of a kind', 8, $this->getRank($groupedFaces), $groupedFaces);
             }
         }
 
@@ -370,7 +372,7 @@ class HandFinder
         }
 
         if (count($res) == 5) {
-            return $this->getResponse('Full House', $this->getRank($res), $res);
+            return $this->getResponse('Full House', 7, $this->getRank($res), $res);
         }
 
         return false;
@@ -414,7 +416,7 @@ class HandFinder
             if (count($groupedCards) == 5) {
                 $flushCards = $this->sortCards($groupedCards);
 
-                return $this->getResponse('Flush', $this->getRank($flushCards), $flushCards);
+                return $this->getResponse('Flush', 6, $this->getRank($flushCards), $flushCards);
             }
         }
 
@@ -450,7 +452,7 @@ class HandFinder
                 }
             }
 
-            return $this->getResponse('Straight', 6, $response);
+            return $this->getResponse('Straight', 5, 6, $response);
         }
 
         foreach ($cards as $key => $value) {
@@ -461,7 +463,7 @@ class HandFinder
             }
 
             if (count($response) == 5) {
-                return $this->getResponse('Straight', $this->getRank($response), $response);
+                return $this->getResponse('Straight', 5, $this->getRank($response), $response);
             }
         }
 
@@ -481,7 +483,7 @@ class HandFinder
 
         foreach ($faces as $face => $groupedFaces) {
             if (count($groupedFaces) == 3) {
-                return $this->getResponse('Three of a kind', $this->getRank($groupedFaces), $groupedFaces);
+                return $this->getResponse('Three of a kind', 4, $this->getRank($groupedFaces), $groupedFaces);
             }
         }
 
@@ -497,7 +499,7 @@ class HandFinder
      *
      * @return array|bool
      */
-    private function findPair($typeOfPair, $nbCards, array $cards)
+    private function findPair($typeOfPair, $handRank, $nbCards, array $cards)
     {
         $faces = $this->findMultipleFaceCards($cards);
         $response = [];
@@ -511,7 +513,7 @@ class HandFinder
         }
 
         if (count($response) == $nbCards) {
-            return $this->getResponse($typeOfPair, $this->getRank($response), $response);
+            return $this->getResponse($typeOfPair, $handRank, $this->getRank($response), $response);
         }
 
         return false;
@@ -526,7 +528,7 @@ class HandFinder
      */
     private function isTwoPairs(array $cards)
     {
-        if ($response = $this->findPair('Two Pairs', 4, $cards)) {
+        if ($response = $this->findPair('Two Pairs', 3, 4, $cards)) {
             return $response;
         }
 
@@ -542,7 +544,7 @@ class HandFinder
      */
     private function isOnePair(array $cards)
     {
-        if ($response = $this->findPair('One Pair', 2, $cards)) {
+        if ($response = $this->findPair('One Pair', 2, 2, $cards)) {
             return $response;
         }
 
@@ -560,6 +562,6 @@ class HandFinder
     {
         $response[] =  current($cards);
 
-        return $this->getResponse('High card', $this->getRank($response), $response);
+        return $this->getResponse('High card', 1, $this->getRank($response), $response);
     }
 }
