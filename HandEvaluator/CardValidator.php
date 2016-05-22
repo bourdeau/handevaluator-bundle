@@ -56,7 +56,7 @@ class CardValidator
     /**
      * Look for card duplication
      *
-     * @param  array  $flop
+     * @param  array  $cards
      *
      * @return boolean
      */

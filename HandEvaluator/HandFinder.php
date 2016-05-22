@@ -16,7 +16,7 @@ class HandFinder
     /**
      * Constructor
      *
-     * @param [type] $cardValidator [description]
+     * @param CardValidator $cardValidator [description]
      */
     public function __construct(CardValidator $cardValidator)
     {
@@ -260,7 +260,6 @@ class HandFinder
                     break;
                 default:
                     throw new \Exception(sprintf("The face %s doesn't exist!", $color));
-                    break;
             }
         }
 
@@ -563,6 +562,7 @@ class HandFinder
      */
     private function isHighCard(array $cards)
     {
+        $response = [];
         $response[] =  current($cards);
 
         return $this->getResponse('High card', 1, $this->getRank($response), $response);
