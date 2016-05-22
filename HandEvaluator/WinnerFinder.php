@@ -80,13 +80,15 @@ class WinnerFinder
                 return $challenger;
             }
 
+            $equalHandRank = $currentWinner['hand_rank'] == $currentChallenger['hand_rank'];
+            
             // Current player hand rank is equal to current winner but it's card ranks is higher
-            if ($currentWinner['hand_rank'] == $currentChallenger['hand_rank'] && $currentWinner['card_rank'] < $currentChallenger['card_rank']) {
+            if ($equalHandRank && $currentWinner['card_rank'] < $currentChallenger['card_rank']) {
                 return $challenger;
             }
 
             // Players are equaly ranked, it's a dead heat. We return both players
-            if ($currentWinner['hand_rank'] == $currentChallenger['hand_rank'] && $currentWinner['card_rank'] == $currentChallenger['card_rank']) {
+            if ($equalHandRank && $currentWinner['card_rank'] == $currentChallenger['card_rank']) {
                 return array_merge($currentWinners, $challenger);
             }
         }

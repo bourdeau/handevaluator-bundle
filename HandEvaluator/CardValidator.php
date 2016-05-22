@@ -34,6 +34,8 @@ class CardValidator
         if ($this->areCardsFormatValid($cards) && $this->hasNoCardDuplication($cards)) {
             return true;
         }
+
+        return $false;
     }
 
     /**
