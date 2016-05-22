@@ -169,6 +169,12 @@ class HandFinder
         ];
     }
 
+    /**
+     * Group cards by faces
+     *
+     * @param  array  $cards
+     * @return array
+     */
     private function findMultipleFaceCards(array $cards)
     {
         $faces = [
@@ -241,6 +247,7 @@ class HandFinder
 
         return $faces;
     }
+    
     /**
      * Return true if the cards are a Royal Flush.
      *
