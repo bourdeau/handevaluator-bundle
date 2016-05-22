@@ -75,49 +75,36 @@ class HandFinder
         throw new \Exception("Couldn't find a Hand!");
     }
 
+    /**
+     * Sort cards
+     *
+     * @param  array  $cards
+     *
+     * @return array
+     */
     private function sortCards(array $cards)
     {
         $data = [];
+        $cardOrder = [
+            'A'  => 1,
+            'K'  => 2,
+            'Q'  => 3,
+            'J'  => 4,
+            '10' => 5,
+            '9'  => 6,
+            '8'  => 7,
+            '7'  => 8,
+            '6'  => 9,
+            '5'  => 10,
+            '4'  => 11,
+            '3'  => 12,
+            '2'  => 13,
+        ];
 
         foreach ($cards as $card) {
-            if (substr($card, 0, -1) == 'A') {
-                $data[1] = $card;
-            }
-            if (substr($card, 0, -1) == 'K') {
-                $data[2] = $card;
-            }
-            if (substr($card, 0, -1) == 'Q') {
-                $data[3] = $card;
-            }
-            if (substr($card, 0, -1) == 'J') {
-                $data[4] = $card;
-            }
-            if (substr($card, 0, 2) == '10') {
-                $data[5] = $card;
-            }
-            if (substr($card, 0, -1) == '9') {
-                $data[6] = $card;
-            }
-            if (substr($card, 0, -1) == '8') {
-                $data[7] = $card;
-            }
-            if (substr($card, 0, -1) == '7') {
-                $data[8] = $card;
-            }
-            if (substr($card, 0, -1) == '6') {
-                $data[9] = $card;
-            }
-            if (substr($card, 0, -1) == '5') {
-                $data[10] = $card;
-            }
-            if (substr($card, 0, -1) == '4') {
-                $data[11] = $card;
-            }
-            if (substr($card, 0, -1) == '3') {
-                $data[12] = $card;
-            }
-            if (substr($card, 0, -1) == '2') {
-                $data[13] = $card;
+            $cardKey = substr($card, 0, -1);
+            if (array_key_exists($cardKey, $cardOrder)) {
+                $data[$cardOrder[$cardKey]] = $card;
             }
         }
 
@@ -126,48 +113,37 @@ class HandFinder
         return $data;
     }
 
+    /**
+     * Get rank of a card
+     *
+     * @param  array  $cards
+     *
+     * @return int
+     */
     private function getRank(array $cards)
     {
+        $cardRank = [
+            'A'  => 13,
+            'K'  => 12,
+            'Q'  => 11,
+            'J'  => 10,
+            '10' => 9,
+            '9'  => 8,
+            '8'  => 7,
+            '7'  => 6,
+            '6'  => 5,
+            '5'  => 4,
+            '4'  => 3,
+            '3'  => 2,
+            '2'  => 1,
+        ];
+
         $card = current($cards);
 
-        if (substr($card, 0, -1) == 'A') {
-            return 13;
-        }
-        if (substr($card, 0, -1) == 'K') {
-            return 12;
-        }
-        if (substr($card, 0, -1) == 'Q') {
-            return 11;
-        }
-        if (substr($card, 0, -1) == 'J') {
-            return 10;
-        }
-        if (substr($card, 0, 2) == '10') {
-            return 9;
-        }
-        if (substr($card, 0, -1) == '9') {
-            return 8;
-        }
-        if (substr($card, 0, -1) == '8') {
-            return 7;
-        }
-        if (substr($card, 0, -1) == '7') {
-            return 6;
-        }
-        if (substr($card, 0, -1) == '6') {
-            return 5;
-        }
-        if (substr($card, 0, -1) == '5') {
-            return 4;
-        }
-        if (substr($card, 0, -1) == '4') {
-            return 3;
-        }
-        if (substr($card, 0, -1) == '3') {
-            return 2;
-        }
-        if (substr($card, 0, -1) == '2') {
-            return 1;
+        $cardFace = substr($card, 0, -1);
+
+        if (array_key_exists($cardFace, $cardRank)) {
+            return $cardRank[$cardFace];
         }
 
         throw new \Exception(sprintf('No rank found for card %s'), $card);
