@@ -35,7 +35,7 @@ class CardValidator
             return true;
         }
 
-        return $false;
+        return false;
     }
 
     /**
